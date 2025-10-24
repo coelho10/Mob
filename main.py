@@ -62,14 +62,13 @@ def login_view(page: ft.Page):
 
         # Salva o email também ao fazer login
         salvar_email(email)
-        
-        pg = Progresso(page, "Aguarde")        
+        pg = Progresso(page, "Aguarde Login...")
+        pg.Mostrar()              
         sucesso, msg = validar_usuario(email, senha)
-        if sucesso:
-            pg.Fechar()
+        pg.Fechar()
+        if sucesso:            
             page.go("/faturamento")
-        else:
-            pg.Fechar()
+        else:        
             status_text.value = f"Email ou senha incorretos. {msg}"
             status_text.color = ft.Colors.RED        
         status_text.update()
@@ -108,18 +107,38 @@ def main(page: ft.Page):
     page.theme_mode = ft.ThemeMode.DARK
     
     def route_change(route):
-        page.views.clear()
-        if page.route == "/login":
-            page.views.append(login_view(page))
-        elif page.route == "/principal":
-            page.views.append(principal_view(page))
-        elif page.route == "/faturamento":
-            page.views.append(faturamento_view(page))
-        elif page.route == "/pedido":
-            page.views.append(pedido_view(page))
-        elif page.route == "/cadcliente":
-            page.views.append(cadcliente_view(page))
-        page.update()
+        try:
+            print(f"Navegando para: {page.route}")  # Debug
+            page.views.clear()
+        
+            if page.route == "/login":
+                print("Carregando login_view...")  # Debug
+                page.views.append(login_view(page))
+            
+            elif page.route == "/principal":
+                print("Carregando principal_view...")  # Debug
+                page.views.append(principal_view(page))
+            
+            elif page.route == "/faturamento":
+                print("Carregando faturamento_view...")  # Debug
+                page.views.append(faturamento_view(page))
+                print("faturamento_view carregado com sucesso!")  # Debug
+            
+            elif page.route == "/pedido":
+                print("Carregando pedido_view...")  # Debug
+                page.views.append(pedido_view(page))
+            
+            elif page.route == "/cadcliente":
+                print("Carregando cadcliente_view...")  # Debug
+                page.views.append(cadcliente_view(page))
+            
+            page.update()
+            print("Page atualizado com sucesso!")  # Debug
+        
+        except Exception as e:
+            print(f"ERRO no route_change: {e}")  # Debug
+            import traceback
+            traceback.print_exc()  # Mostra o erro completo
 
     page.on_route_change = route_change
     page.go("/login")

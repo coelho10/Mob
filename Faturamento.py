@@ -13,16 +13,38 @@ meses = {
 }
 
 def faturamento_view(page: ft.Page):
-    drawer = criar_menu(page)
+    # Wrapper com try-except para capturar erros na criação da view
+    try:
+        drawer = criar_menu(page)
+    except Exception as e:
+        print(f"Erro ao criar menu: {e}")
+        drawer = None
 
     ano_atual = datetime.now().year
+    mes_atual = datetime.now().month
+    
+    # Encontra o nome do mês atual
+    mes_atual_nome = None
+    for nome, num in meses.items():
+        if num == mes_atual:
+            mes_atual_nome = nome
+            break
+    
     ano_dropdown = ft.Dropdown(
         label="Ano",
         options=[ft.dropdown.Option(str(a)) for a in range(ano_atual - 2, ano_atual + 1)],
-        value=str(ano_atual)
+        value=str(ano_atual),
+        width=150
     )
 
-    resultado_text = ft.Text("")
+    month_dropdown = ft.Dropdown(
+        label="Mês",
+        options=[ft.dropdown.Option(m) for m in meses.keys()],
+        value=mes_atual_nome,  # Define o mês atual como valor inicial
+        width=150
+    )
+
+    resultado_text = ft.Text("", size=16)
     
     # Container para exibir os resultados
     resultado_container = ft.Container(
@@ -40,18 +62,25 @@ def faturamento_view(page: ft.Page):
     )
 
     def selection_changed(e):
-        mes_nome = month_dropdown.value
-        mes_numero = meses.get(mes_nome)
-        ano_valor = ano_dropdown.value
+        pg = None
+        try:
+            mes_nome = month_dropdown.value
+            mes_numero = meses.get(mes_nome)
+            ano_valor = ano_dropdown.value
 
-        if mes_numero and ano_valor:
-            pg = Progresso(page,"atualizado o faturamento da empresa neilar")                        
-            #pg.mostrar()  # Aparece
+            if not mes_nome or not mes_numero or not ano_valor:
+                resultado_text.value = "Selecione um mês e ano"
+                resultado_text.color = ft.Colors.ORANGE
+                resultado_text.update()
+                return
+
+            pg = Progresso(page, "Atualizando o Faturamento")
+            pg.Mostrar()
+            
             sucesso, msg = RetFaturamento(int(ano_valor), int(mes_numero))
+            
             if sucesso:
                 if isinstance(msg, list) and msg:
-                    
-
                     # Calcula o total
                     total_faturamento = sum(item.get("Faturamento", 0) for item in msg)
                     
@@ -81,7 +110,7 @@ def faturamento_view(page: ft.Page):
                     resultado_text.value = ""
                     
                     # Atualiza o total
-                    total_text.value = f"Total Geral: R$ "+converte_valor(total_faturamento)
+                    total_text.value = f"Total Geral: R$ {converte_valor(total_faturamento)}"
                 else:
                     resultado_container.content = None
                     resultado_text.value = "Nenhum resultado encontrado"
@@ -89,54 +118,83 @@ def faturamento_view(page: ft.Page):
                     total_text.value = ""  
             else:
                 resultado_container.content = None
-                resultado_text.value = f"Sem faturamento no período"
+                resultado_text.value = "Sem faturamento no período"
                 resultado_text.color = ft.Colors.RED_50
                 total_text.value = ""  
+            
+            if pg:
+                pg.Fechar()
             
             resultado_text.update()
             resultado_container.update()
             total_text.update()
-            pg.Fechar()
 
-        page.snack_bar = ft.SnackBar(ft.Text(f"Mês selecionado: {mes_nome} → {mes_numero}"))
-        page.snack_bar.open = True
-        page.update()
-
-    month_dropdown = ft.Dropdown(
-        label="Mês",
-        options=[ft.dropdown.Option(m) for m in meses.keys()],
-        on_change=selection_changed,
-    )
+            page.snack_bar = ft.SnackBar(
+                ft.Text(f"Mês selecionado: {mes_nome} → {mes_numero}"),
+                duration=2000
+            )
+            page.snack_bar.open = True
+            page.update()
+            
+        except Exception as ex:
+            print(f"Erro em selection_changed: {ex}")
+            import traceback
+            traceback.print_exc()
+            
+            if pg:
+                try:
+                    pg.Fechar()
+                except:
+                    pass
+                    
+            resultado_container.content = None
+            resultado_text.value = f"Erro ao carregar dados: {str(ex)}"
+            resultado_text.color = ft.Colors.RED
+            total_text.value = ""
+            
+            try:
+                resultado_text.update()
+                resultado_container.update()
+                total_text.update()
+                page.update()
+            except:
+                pass
 
     def ano_changed(e):
         selection_changed(e)
 
+    month_dropdown.on_change = selection_changed
     ano_dropdown.on_change = ano_changed
 
-    return ft.View(
+    # Cria a view
+    view = ft.View(
         "/faturamento",
         controls=[
             ft.IconButton(
                 icon=ft.Icons.MENU,
                 icon_size=30,
                 tooltip="Abrir Menu",
-                on_click=lambda e: page.open(drawer)
+                on_click=lambda e: page.open(drawer) if drawer else None
             ),
             ft.Row(
-                [ft.Text("Faturamento", size=24)],
+                [ft.Text("Faturamento", size=24, weight=ft.FontWeight.BOLD)],
                 alignment=ft.MainAxisAlignment.CENTER
             ),
             ft.Row(
                 [ano_dropdown, month_dropdown],
-                alignment=ft.MainAxisAlignment.CENTER
+                alignment=ft.MainAxisAlignment.CENTER,
+                spacing=10
             ),
             resultado_text,
             resultado_container,
-            ft.Divider(height=20, color=ft.Colors.BLUE),  # Linha divisória
+            ft.Divider(height=20, color=ft.Colors.BLUE),
             ft.Row(
                 [total_text],
                 alignment=ft.MainAxisAlignment.CENTER
             )
         ],
-        drawer=drawer
+        drawer=drawer,
+        scroll=ft.ScrollMode.AUTO
     )
+    
+    return view

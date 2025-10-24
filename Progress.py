@@ -1,16 +1,14 @@
-from math import exp
 import flet as ft
 
 class Progresso():
     def __init__(self, page: ft.Page, texto="Aguarde..."):
         self.page = page
-        self.texto = texto  # Texto que aparecerá dentro do AlertDialog
+        self.texto = texto
         self.label = ft.Text(
             self.texto, 
             size=18,
-            no_wrap=False,  # Permite quebra de linha
-            width=300,  # Define uma largura máxima para forçar quebra
-            expand=True
+            no_wrap=False,
+            width=300
         )
         self.dialog = ft.AlertDialog(
             modal=True,
@@ -26,14 +24,12 @@ class Progresso():
             tight=True),
         )
         self.page.overlay.append(self.dialog)
-        #Mostrar mensagem
+
+    def Mostrar(self):
         self.label.value = self.texto
         self.dialog.open = True
-        self.page.update()    
+        self.page.update()
 
     def Fechar(self):
         self.dialog.open = False
         self.page.update()
-
-
-Progresso = Progresso  # Para facilitar import progress = Progress(page)
