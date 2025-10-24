@@ -63,13 +63,13 @@ def login_view(page: ft.Page):
         # Salva o email também ao fazer login
         salvar_email(email)
         
-        pg = progress(page, "Aguarde")        
+        pg = Progresso(page, "Aguarde")        
         sucesso, msg = validar_usuario(email, senha)
         if sucesso:
-            pg.fechar()
+            pg.Fechar()
             page.go("/faturamento")
         else:
-            pg.fechar()
+            pg.Fechar()
             status_text.value = f"Email ou senha incorretos. {msg}"
             status_text.color = ft.Colors.RED        
         status_text.update()

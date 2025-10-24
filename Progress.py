@@ -1,7 +1,7 @@
 from math import exp
 import flet as ft
 
-class Progress():
+class Progresso():
     def __init__(self, page: ft.Page, texto="Aguarde..."):
         self.page = page
         self.texto = texto  # Texto que aparecerá dentro do AlertDialog
@@ -31,9 +31,9 @@ class Progress():
         self.dialog.open = True
         self.page.update()    
 
-    def fechar(self):
+    def Fechar(self):
         self.dialog.open = False
         self.page.update()
 
 
-progress = Progress  # Para facilitar import progress = Progress(page)
+Progresso = Progresso  # Para facilitar import progress = Progress(page)
