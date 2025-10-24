@@ -5,7 +5,7 @@ from Faturamento import faturamento_view
 from CadCliente import cadcliente_view  
 from Pedido import pedido_view  
 from ValidaUsuario import validar_usuario  # Mudança aqui
-from Progress import *
+from Progress import Progresso
 
 #https://flet-controls-gallery.fly.dev/navigation/navigationdrawer
 

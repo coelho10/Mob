@@ -195,6 +195,5 @@ def faturamento_view(page: ft.Page):
         ],
         drawer=drawer,
         scroll=ft.ScrollMode.AUTO
-    )
-    
+    )    
     return view
