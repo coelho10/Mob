@@ -66,13 +66,14 @@ def login_view(page: ft.Page):
         pg = progress(page, "Aguarde")        
         sucesso, msg = validar_usuario(email, senha)
         if sucesso:
+            pg.fechar()
             page.go("/principal")
         else:
+            pg.fechar()
             status_text.value = f"Email ou senha incorretos. {msg}"
             status_text.color = ft.Colors.RED        
         status_text.update()
-        pg.fechar()
-    
+            
     acessar_btn = ft.ElevatedButton(
         text="Acessar",
         icon=ft.Icons.LOGIN,
