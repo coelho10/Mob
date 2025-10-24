@@ -1,34 +1,26 @@
 import mysql.connector
 
 def conectar():
-    try:
-        conn = mysql.connector.connect(
-            host="10.1.1.248", #local
-            port=3306,
-            user="Flet",
-            password="FtSas1#4AS1s1sKa1",
-            database="neilar",
-            ssl_disabled=True
-        )
-        if not conn:
+    conn = None
+    hosts = [
+        ("interno.neilar.com.br", "177.54.11.188"),    # externo 1
+        ("10.1.1.248", "local"),            # local                
+        ("interno2.neilar.com.br", "186.211.98.22")  # externo 2
+    ]
+    for host, comment in hosts:
+        try:
             conn = mysql.connector.connect(
-            host="interno2.neilar.com.br", #186.211.98.22 
-            port=3306,
-            user="Flet",
-            password="FtSas1#4AS1s1sKa1",
-            database="neilar",
-            ssl_disabled=True
-        )
-        if not conn:
-            conn = mysql.connector.connect(
-            host="interno.neilar.com.br", #177.54.11.188
-            port=3306,
-            user="Flet",
-            password="FtSas1#4AS1s1sKa1",
-            database="neilar",
-            ssl_disabled=True
-        )
-        return conn
-    except mysql.connector.Error as err:
-        print(f"Erro ao conectar ao banco: {err}")
-        return None
+                host=host,
+                port=3306,
+                user="Flet",
+                password="FtSas1#4AS1s1sKa1",
+                database="neilar",
+                ssl_disabled=True,
+                connection_timeout=2  # ajustável conforme sua necessidade (em segundos)
+            )
+            if conn.is_connected():
+                return conn
+        except mysql.connector.Error as err:
+            print(f"Tentativa de conexão falhou ({host}): {err}")
+            print("Erro ao conectar ao banco: Todas as tentativas falharam.")
+    return None

@@ -122,3 +122,4 @@ def main(page: ft.Page):
 
 
 ft.app(target=main, view=ft.WEB_BROWSER, host="0.0.0.0", port=8800, assets_dir="assets")
+#ft.app(target=main, view=ft.WEB_BROWSER, port=10000, assets_dir="assets")
