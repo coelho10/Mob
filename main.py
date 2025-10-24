@@ -5,6 +5,7 @@ from Faturamento import faturamento_view
 from CadCliente import cadcliente_view  
 from Pedido import pedido_view  
 from ValidaUsuario import validar_usuario  # Mudança aqui
+from Progress import *
 
 #https://flet-controls-gallery.fly.dev/navigation/navigationdrawer
 
@@ -41,7 +42,7 @@ def login_view(page: ft.Page):
         password=True, 
         can_reveal_password=True, 
         width=300, 
-        #value="1010"
+        value="1011"
     )
     status_text = ft.Text("")
 
@@ -61,7 +62,8 @@ def login_view(page: ft.Page):
 
         # Salva o email também ao fazer login
         salvar_email(email)
-
+        
+        pg = progress(page, "Aguarde")        
         sucesso, msg = validar_usuario(email, senha)
         if sucesso:
             page.go("/principal")
@@ -69,6 +71,7 @@ def login_view(page: ft.Page):
             status_text.value = f"Email ou senha incorretos. {msg}"
             status_text.color = ft.Colors.RED        
         status_text.update()
+        pg.fechar()
     
     acessar_btn = ft.ElevatedButton(
         text="Acessar",
@@ -122,4 +125,3 @@ def main(page: ft.Page):
 
 
 ft.app(target=main, view=ft.WEB_BROWSER, host="0.0.0.0", port=8800, assets_dir="assets")
-#ft.app(target=main, view=ft.WEB_BROWSER, port=10000, assets_dir="assets")

@@ -3,6 +3,7 @@ from menu import criar_menu
 from bd.FunBD import RetFaturamento
 from datetime import datetime
 from geral import *
+from Progress import *
 
 
 meses = {
@@ -44,9 +45,13 @@ def faturamento_view(page: ft.Page):
         ano_valor = ano_dropdown.value
 
         if mes_numero and ano_valor:
+            pg = progress(page,"atualizado o faturamento da empresa neilar")            
+            #pg.mostrar()  # Aparece
             sucesso, msg = RetFaturamento(int(ano_valor), int(mes_numero))
             if sucesso:
                 if isinstance(msg, list) and msg:
+                    
+
                     # Calcula o total
                     total_faturamento = sum(item.get("Faturamento", 0) for item in msg)
                     
@@ -91,6 +96,7 @@ def faturamento_view(page: ft.Page):
             resultado_text.update()
             resultado_container.update()
             total_text.update()
+            pg.fechar()
 
         page.snack_bar = ft.SnackBar(ft.Text(f"Mês selecionado: {mes_nome} → {mes_numero}"))
         page.snack_bar.open = True
