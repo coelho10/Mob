@@ -42,7 +42,7 @@ def login_view(page: ft.Page):
         password=True, 
         can_reveal_password=True, 
         width=300, 
-        value="1011"
+        #value="1010"
     )
     status_text = ft.Text("")
 
@@ -73,7 +73,7 @@ def login_view(page: ft.Page):
             status_text.value = f"Email ou senha incorretos. {msg}"
             status_text.color = ft.Colors.RED        
         status_text.update()
-            
+
     acessar_btn = ft.ElevatedButton(
         text="Acessar",
         icon=ft.Icons.LOGIN,
