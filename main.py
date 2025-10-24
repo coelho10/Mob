@@ -67,7 +67,7 @@ def login_view(page: ft.Page):
         sucesso, msg = validar_usuario(email, senha)
         if sucesso:
             pg.fechar()
-            page.go("/principal")
+            page.go("/faturamento")
         else:
             pg.fechar()
             status_text.value = f"Email ou senha incorretos. {msg}"
