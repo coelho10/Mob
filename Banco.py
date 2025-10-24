@@ -12,8 +12,9 @@ def conectar():
             conn = mysql.connector.connect(
                 host=host,
                 port=3306,
-                user="Flet",
-                password="FtSas1#4AS1s1sKa1",
+                user="representante",
+                #password="FtSas1#4AS1s1sKa1",
+                password="Rep140875####a82*As1As1s@87Gs",
                 database="neilar",
                 ssl_disabled=True,
                 connection_timeout=2  # ajustável conforme sua necessidade (em segundos)
