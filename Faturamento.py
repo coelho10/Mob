@@ -6,6 +6,8 @@ from geral import converte_valor
 from Progress import Progresso
 
 
+
+
 meses = {
     "JAN": 1, "FEV": 2, "MAR": 3, "ABR": 4,
     "MAI": 5, "JUN": 6, "JUL": 7, "AGO": 8,
@@ -120,8 +122,8 @@ def faturamento_view(page: ft.Page):
                 resultado_container.content = None
                 resultado_text.value = "Sem faturamento no período"
                 resultado_text.color = ft.Colors.RED_50
-                total_text.value = ""  
-            
+                total_text.value = ""                        
+
             if pg:
                 pg.Fechar()
             

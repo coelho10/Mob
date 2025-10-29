@@ -1,6 +1,6 @@
 import flet as ft
 from menu import criar_menu
-from dialogo_modal import *
+from dialogo_modal import MsgInfo
 
 
 def pedido_view(page: ft.Page):   

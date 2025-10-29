@@ -3,6 +3,7 @@ from Banco import conectar
 
 
 def RetFaturamento(ano, mes):
+    resultado = []  # Limpa (inicializa) o resultado no início
     conn = conectar()
     if conn is None:
         return False, "Erro conexão banco"

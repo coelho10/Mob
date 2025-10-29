@@ -69,7 +69,7 @@ def login_view(page: ft.Page):
         if sucesso:            
             page.go("/faturamento")
         else:        
-            status_text.value = f"Email ou senha incorretos. {msg}"
+            status_text.value = f"Email ou Senha Incorretos. {msg}"
             status_text.color = ft.Colors.RED        
         status_text.update()
 
